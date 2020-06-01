@@ -1,6 +1,21 @@
 {
   "expo": {
-    "name": "FunEverywhere",
+    "android": {
+      "package": "com.fbotalla.FunEverywhere",
+      "versionCode": 1,
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-3162403518854486~5391812035"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.fbotalla.FEFunEverywhere",
+      "buildNumber": "1.0.0",
+      "config": {  
+        "googleMobileAdsAppId": "ca-app-pub-3162403518854486~9698722709" 
+      },
+      "supportsTablet": true
+    },
+    "name": "FunEverywhere",   
     "slug": "FunEverywhere",
     "platforms": [
       "ios",
@@ -9,9 +24,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/FE.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/FE-FunEverywhere.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,8 +36,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    }
+    "description": ""
   }
 }

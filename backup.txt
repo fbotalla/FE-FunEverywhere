@@ -1,0 +1,3 @@
+expo build:android -t apk
+
+expo build:ios 

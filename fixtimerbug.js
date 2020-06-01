@@ -1,47 +1,4 @@
-import React from 'react';
-import * as Font from 'expo-font';
-import Navig from './routes/navig'
-
-
-/** USE THIS TO MAKE THE DB WORK
-import {decode, encode} from 'base-64'
-if (!global.btoa) {  global.btoa = encode }
-if (!global.atob) { global.atob = decode }
-
-*/
-
-
-
-const getFonts = () => Font.loadAsync({
-  'LakkiReddy-Regular' : require('./assets/fonts/LakkiReddy-Regular.ttf'),
-  'Bellota-Regular' : require('./assets/fonts/Bellota-Regular.ttf'),
-  'Bellota-Bold' : require('./assets/fonts/Bellota-Bold.ttf'),
-});
-
-export default function App(){ 
-
-    const [fontLoaded, setFontLoaded] = useState(false);
-
-    if(fontLoaded){
-      return(
-        <Navig/>
-    );
-    }else{
-      return(
-        <AppLoading
-          startAsync= {getFonts}
-          onFinish={()=> setFontLoaded(true)}/>
-      )
-  }
-}
-
-/** 
- *  This is just to fix the timer bug (DISREGARD)
- * 
- */
 import { Platform, InteractionManager } from 'react-native';
-import { useState } from 'react';
-import { AppLoading } from 'expo';
 const _setTimeout = global.setTimeout;
 const _clearTimeout = global.clearTimeout;
 const MAX_TIMER_DURATION_MS = 60 * 1000;
