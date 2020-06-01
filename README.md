@@ -1,2 +1,2 @@
-React Native application
+React Native application.<br>
 Shortly downloadable on Google Play
