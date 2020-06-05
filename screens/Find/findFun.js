@@ -91,7 +91,7 @@ const findAndSetDefaultImage = async() =>{
 const moveToResults = () =>{ 
     if(arrEvents.length > 0 || arrActivities.length > 0){
         console.log('Sending',funImage[0])
-        navigation.navigate('Results', {data: {arrEvents: arrEvents,arrActivities: arrActivities, funImage:funImage,profilePicture:profilePicture}})
+        navigation.navigate('Results', {data: {arrEvents: arrEvents,arrActivities: arrActivities, funImage:funImage,profilePicture:profilePicture, profilePictureEvent: profilePictureEvent}})
         setArrActivities([]);
         setArrEvents([]);
         setFunImage([]);
@@ -155,7 +155,7 @@ const handlePress = (values)=>{
         const images = await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
             const ref = firebase.storage().ref('images/'+ doc.data().image)
             const result = await ref.getDownloadURL();
-            console.log('results', result); 
+           // console.log('results', result); 
             return result;    
                                                
         }));
@@ -166,10 +166,21 @@ const handlePress = (values)=>{
         const profilePictures = await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
             const reference = firebase.storage().ref('userImages/'+ doc.data().userId)
             const results = await reference.getDownloadURL();
-            console.log(results)
+         //   console.log(results)
             return results;                                         
         }));
             setProfilePicture(profilePictures);
+     }).catch(console.log('Handling')); 
+
+     
+     firebase.firestore().collection('PostedFunEvents').where("geolocation", ">=", range.lower).where("geolocation", "<=", range.upper).get().then(async (querySnapshot) =>{
+        const profilePictures = await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
+            const reference = firebase.storage().ref('userImages/'+ doc.data().userId)
+            const results = await reference.getDownloadURL();
+            console.log('THIS RESULT' ,results)
+            return results;                                         
+        }));
+            setProfilePictureEvent(profilePictures);
      }).catch(console.log('Handling')); 
 
 }
@@ -198,6 +209,7 @@ const handlePress = (values)=>{
     const [arrActivities, setArrActivities] = useState([]);
     const [funImage, setFunImage] = useState([]);
     const [profilePicture, setProfilePicture] = useState([]);
+    const [profilePictureEvent, setProfilePictureEvent] = useState([]);
 
     
     const [userName, setUsername] = useState({currentUser:{email:null, displayName:null}}); 

@@ -19,7 +19,7 @@ function PostFun({route,navigation}) {
             }}
             style={styles.header}>
             <Tab.Screen name="Activity" component={() => <FindFunActivity data={data.arrActivities} image={data.funImage} profilePictures={data.profilePicture} />} />
-            <Tab.Screen name="Event" component={() => <FindFunEvent data={data.arrEvents} profilePictures={data.profilePicture} />} />
+            <Tab.Screen name="Event" component={() => <FindFunEvent data={data.arrEvents} profilePictureEvent={data.profilePictureEvent} />} />
         </Tab.Navigator>
   );
 }  

@@ -346,23 +346,39 @@ const myPosts = () =>{
 
         <ScrollView>
         <View style={{alignItems:'center'}}><Button onPress={displayPosts}>Load your posts</Button></View>
-        <Text>{arrEvents.length > 0 ? 'Events' : null }</Text>
+        <Text style={{alignSelf:'center', fontSize:25, margin:20}}>{arrActivities.length > 0 ? 'Your Posted Events' : null }</Text>
         {arrEvents.map((item, key)=>(  
             <Card key={key}>  
-                         <View><Text style={styles.txt}>{item.title}</Text></View>
+                         <View style={styles.cardImageFirst}><Image source= {{uri: profilePicture[0]}}  style={styles.profilePic} /><Text style={styles.txtTitle}> {item.title}</Text></View>
                          <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
-                         <View><Text style={styles.txt}>{item.description}</Text></View>
-                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>{item.eventDate}</Text><Text style={styles.txt}> at {item.eventTime}</Text></View>
-                    <View style={{flexDirection:'row'}}><TouchableOpacity onPress={()=> {
+                         <View><Text style={styles.txt}> Posted on: {item.datePosted}</Text></View>
+                         <View><Text style={styles.txt}> {item.description}</Text></View>
+                         <View style={{flexDirection:'row'}}><Text style={styles.txt}> Event Date: {item.eventDate}</Text></View>
+                         <View><Text style={styles.txt}> Event Time: {item.eventTime}</Text></View> 
+                    <View style={{flexDirection:'row', alignSelf:'center', width:'50%', justifyContent:'space-around'}}><TouchableOpacity onPress={()=> {
                             console.log(eventsId[key]);
-                            firebase.firestore().collection('PostedFunEvents').doc(eventsId[key]).delete();
+                            //firebase.firestore().collection('PostedFunEvents').doc(eventsId[key]).delete();
                             Alert.alert(
-                                'Event successfully deleted',
-                                'Click on \"Load your posts\" to view the change'
-                            )
+                                "Are you sure you want to delete this post?",
+                                "",
+                                [
+                                  {
+                                    text: "Undo",
+                                    onPress: () => console.log("Cancel Pressed"),
+                                    style: "cancel"
+                                  },
+                                  { text: "Delete", onPress: () => firebase.firestore().collection('PostedFunEvents').doc(eventsId[key]).delete().then(
+                                      Alert.alert(
+                                          'Deleted',
+                                          'Click on "Load your posts" to view the change'
+                                      )
+                                  ) }
+                                ],
+                                { cancelable: false }
+                              );
                     }}>
                    
-                    <MaterialCommunityIcons name="delete" size={26}/></TouchableOpacity><TouchableOpacity><MaterialIcons name="edit" size={26} onPress={()=>{setModalEventsOpen({visible:true, key:eventsId[key], arr:item, key:key})}} /></TouchableOpacity></View>
+                    <MaterialCommunityIcons name="delete" size={36}/></TouchableOpacity><TouchableOpacity><MaterialIcons name="edit" size={36} onPress={()=>{setModalEventsOpen({visible:true, key:eventsId[key], arr:item, key:key})}} /></TouchableOpacity></View>
                    
                     <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
@@ -373,24 +389,38 @@ const myPosts = () =>{
             </Card>
             ))}
     
-        <Text>{arrActivities.length > 0 ? 'Activities' : null }</Text>
+        <Text style={{alignSelf:'center', fontSize:25,margin:20}}>{arrActivities.length > 0 ? 'Your Posted Activities' : null }</Text>
         {arrActivities.map((item, key)=>(  
             <Card key={key}>  
-                        <View style={styles.cardImageFirst}><Image source= {{uri: profilePicture[0]}}  style={styles.profilePic} /><Text style={{marginLeft:15}}>{item.user}</Text></View>
-                        <View><Text style={styles.txt}>{item.title}</Text></View>
+                      <View style={styles.cardImageFirst}><Image source= {{uri: profilePicture[0]}}  style={styles.profilePic} /><Text style={styles.txtTitle}> {item.title}</Text></View>
                         <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
                         <View><Text style={styles.txt}> Posted on: {item.datePosted}</Text></View>
                         <View style={styles.cardImage}><Image source= {{uri: funImage[key]}}  style={styles.imageFire} /></View>
                         <View><Text style={styles.txt}>Description: {item.description}</Text></View>
                         <View><Text style={styles.txt}>{item.eventDate}</Text></View>
-                        <View style={{flexDirection:'row'}}><TouchableOpacity onPress={()=> {
+
+                        <View style={{flexDirection:'row', alignSelf:'center', width:'50%', justifyContent:'space-around'}}><TouchableOpacity onPress={()=> {
                             console.log(eventsId[key]);
-                            firebase.firestore().collection('PostedFunActivities').doc(activitiesId[key]).delete();
-                            Alert.alert(
-                                'Activity successfully deleted',
-                                'Click on \"Load your posts\" to view the change'
-                            )
-                    }}><MaterialCommunityIcons name="delete" size={26} /></TouchableOpacity><TouchableOpacity><MaterialIcons name="edit" size={26} onPress={()=>{setModalActivitiesOpen({visible:true, key:key, arr:item, funImage:funImage[key] })}} /></TouchableOpacity></View>
+                           // firebase.firestore().collection('PostedFunActivities').doc(activitiesId[key]).delete();
+                           Alert.alert(
+                            "Are you sure you want to delete this post?",
+                            "",
+                            [
+                              {
+                                text: "Undo",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel"
+                              },
+                              { text: "Delete", onPress: () => firebase.firestore().collection('PostedFunActivities').doc(activitiesId[key]).delete().then(
+                                  Alert.alert(
+                                      'Deleted',
+                                      'Click on "Load your posts" to view the change'
+                                  )
+                              ) }
+                            ],
+                            { cancelable: false }
+                          );
+                    }}><MaterialCommunityIcons name="delete" size={36}  /></TouchableOpacity><TouchableOpacity><MaterialIcons name="edit" size={36} onPress={()=>{setModalActivitiesOpen({visible:true, key:key, arr:item, funImage:funImage[key] })}} /></TouchableOpacity></View>
             
                         <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
@@ -411,6 +441,8 @@ const styles = StyleSheet.create({
     cardFirstLine:{
         padding: 5,
         flexDirection:'row',
+        alignSelf:'center',
+        marginBottom:10,
     }, 
     cardImage:{ 
         margin:20,
@@ -484,7 +516,13 @@ const styles = StyleSheet.create({
     txt:{
         fontFamily:'Bellota-Regular',
         fontSize: 18,
+        margin:10,
     },
+    txtTitle:{
+        fontFamily:'Bellota-Bold',
+        fontSize: 20,
+    },
+    
 })
     
 

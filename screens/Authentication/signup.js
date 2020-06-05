@@ -14,7 +14,7 @@ export default class SignUp extends React.Component {
     
   handleSignUp = () => {    
     if(this.state.passwordConfirm === this.state.password){ 
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((userInfo) =>{ 
+    firebase.auth().createUserWithEmailAndPassword(this.state.email.replace(/\s+/g, ''), this.state.password).then((userInfo) =>{ 
         userInfo.user.updateProfile({displayName: this.state.userName}).then(firebase.auth().currentUser.reload()).then((s) => {this.props.navigation.navigate('Navigator')})
     })
       .catch(error => this.setState({ errorMessage: error.message }))

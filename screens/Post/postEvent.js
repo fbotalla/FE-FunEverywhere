@@ -55,7 +55,11 @@ const showTimepicker = () => {
    const onChange = (event, selectedDate) => {
      const currentDate = selectedDate || date;
      setShow(Platform.OS === 'ios');
-     setDate(currentDate);
+     setDate(currentDate);    
+ }
+
+ const tester = ()=>{
+    
  }
 
   
@@ -76,7 +80,7 @@ const showTimepicker = () => {
     const initialValues = {
         user: userName.currentUser.displayName, 
         description: '',
-        datePosted: new Date(), 
+        datePosted:  new Date(),//firebase.firestore.Timestamp.fromDate(new Date()),
         location: '', 
         eventDate: '', 
         title: '',
@@ -110,6 +114,7 @@ const showTimepicker = () => {
                            'Thank you for submitting an event!'
                        )
                        resetForm({values: initialValues})
+                       global.googlePlacesAutocomplete.setAddressText("");
                     }else{
                        Alert.alert(
                            'Error!',
@@ -128,14 +133,15 @@ const showTimepicker = () => {
                     <GoogleAutocomplete 
                         placeholder = 'Insert location '
                         value= {props.values.location}
+                        
                         onPress={(data, details) => {
                                 const latitude = details.geometry.location.lat;
                                 const longitude = details.geometry.location.lng;
 
-                               const hash = geohash.encode(latitude,longitude);
+                                const hash = geohash.encode(latitude,longitude);
                                 {props.values.location = data.description}
-                                {props.values.geolocation = hash}
-                              
+                                {props.values.geolocation = hash}   
+                               
                             }}>     
                     </GoogleAutocomplete>
                 </View >
@@ -166,7 +172,6 @@ const showTimepicker = () => {
                                                              + props.values.title + ' on ' + date.toDateString() + ' at ' + date.toTimeString() + ' Location: ' + props.values.location  : ''}</Text></View>
                    
                     <Button onPress={props.handleSubmit}>Submit</Button>
-
                     </View>    
                   
             </View>       
@@ -202,6 +207,9 @@ const styles = StyleSheet.create({
         paddingTop:15, 
         fontFamily:'Bellota-Regular',
         fontSize: 20,
+        marginBottom:20,
+        backgroundColor:'#ffffff',
+        padding:10,
     },
     textNonEditable:{
         paddingTop:15, 

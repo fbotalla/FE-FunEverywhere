@@ -104,6 +104,7 @@ const [userName, setUsername] = useState({currentUser:{email:null, displayName:n
                        )
                        resetForm({values: initialValues})
                        setIma('');
+                       global.googlePlacesAutocomplete.setAddressText("");
                     }else{
                        Alert.alert(
                            'Error!',
@@ -195,6 +196,10 @@ const styles = StyleSheet.create({
         paddingTop:15, 
         fontFamily:'Bellota-Regular',
         fontSize: 20,
+        marginBottom:6,
+        marginBottom:20,
+        backgroundColor:'#ffffff',
+        padding:10,
     },
     textBox:{
         borderWidth: StyleSheet.hairlineWidth,

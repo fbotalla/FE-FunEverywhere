@@ -14,20 +14,20 @@ import {
 const FindFunActivity = ({data,image,profilePictures}) =>{
 
     useEffect(() => {
-        console.log('Logging profiles: ',profilePictures[1])
-        console.log("Images are: ", image[1]);
+        // console.log('Logging profiles: ',profilePictures[1])
+        // console.log("Images are: ", image[1]);
     })
 
     
     return(
         <View>
             <ScrollView>
-            <Text>Rendering...</Text>
+
            {data.map((item, key)=>(  
                     <Card key={key}>  
-                             <View style={styles.cardImageFirst}><Image source= {{uri: profilePictures[key]}}  style={styles.profilePic} /><Text style={{...styles.txt,...styles.addMarginUser}}>{item.user}</Text></View>
-                             <View><Text style={styles.txt}>{item.title}</Text></View>
-                             <View style={styles.cardFirstLine}><Text style={{...styles.txt,...styles.addMarginLocation}}>{item.location}</Text></View>
+                             <View style={styles.cardImageFirst}><Image source= {{uri: profilePictures[key]}}  style={styles.profilePic} /><Text style={{...styles.txtUser,...styles.addMarginUser}}>{item.user}</Text></View>
+                             <View style={{alignSelf:'center'}}><Text style={styles.txtTitle}>{item.title}</Text></View>
+                             <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
                              <View><Text style={styles.txt}>{item.datePosted}</Text></View>
                              <View style={styles.cardImage}><Image source= {{uri: image[key]}}  style={styles.imageFire} /></View>
                              <View><Text style={styles.txt}>{item.description}</Text></View>
@@ -52,13 +52,14 @@ const styles = StyleSheet.create({
     cardFirstLine:{
         padding: 5,
         flexDirection:'row',
+        alignSelf:'center',
     },
     cardImage:{
         margin:20,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: 'black',
-        width: '75%',
-        height:250,
+        width: '88%',
+        height:400,
         
     },
     imageFire:{
@@ -81,10 +82,16 @@ const styles = StyleSheet.create({
     txt:{
         fontFamily:'Bellota-Regular',
         fontSize: 18,
+        margin:10,
     },
-    addMarginLocation:{
-        marginLeft: 40,
+    txtUser:{
         fontFamily:'Bellota-Bold',
+        fontSize: 20,
+    },
+    txtTitle:{
+        margin:5,
+        fontFamily:'Bellota-Bold',
+        fontSize: 20,
     },
     addMarginUser:{
         marginLeft: 20,
