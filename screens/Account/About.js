@@ -42,9 +42,9 @@ const About = () =>{
         </View>
 
         <View>
-            <Text style ={styles.txt}>Version: 1.0.0</Text>
+            <Text style ={styles.txt}>Version: BETA 0.0.0</Text>
             <Text style ={styles.txt}>Developped by: Fabrizio Botalla botalla.fabrizio@gmail.com</Text>
-            <Text style ={styles.txt}>Designed by: Emily Jean Purdy epurdy6@yahoo.com</Text>
+            <Text style ={styles.txt}>Designed by: Emily Purdy epurdy6@yahoo.com</Text>
             <Text style ={styles.txt}>Contact us by email: botalla.fabrizio@gmail.com</Text>
         </View>
 

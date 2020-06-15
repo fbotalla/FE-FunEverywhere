@@ -100,8 +100,8 @@ const showTimepicker = () => {
                     firebase.firestore().collection('PostedFunEvents').add({
                         datePosted: values.datePosted.toDateString(),
                         description: values.description, 
-                        eventDate: date.toDateString(),
-                        eventTime: date.toTimeString(),
+                        eventDate: firebase.firestore.Timestamp.fromDate(date),
+                        eventTime: firebase.firestore.Timestamp.fromDate(date),
                         location: values.location,
                         geolocation: values.geolocation,
                         title: values.title,
@@ -131,7 +131,7 @@ const showTimepicker = () => {
                 <View>
                 <View  style={styles.form}><Text  style={styles.textNonEditable}>POST EVENT:</Text></View>
                     <GoogleAutocomplete 
-                        placeholder = 'Insert location '
+                        placeholder = 'Insert location'
                         value= {props.values.location}
                         
                         onPress={(data, details) => {

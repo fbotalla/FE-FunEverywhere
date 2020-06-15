@@ -56,8 +56,9 @@ const FindFun = ({navigation}) =>{
  ********************************/
 
  const getGeohashRange = (latitude,longitude,distance)=>{
-    console.log(distance);
+   // console.log(distance);
     if(distance == undefined){distance=0}
+    if(distance == 'Everywhere'){distance = 25000}
     const lat = 0.0144927536231884; // degrees latitude per mile
     const lon = 0.0181818181818182; // degrees longitude per mile
   
@@ -90,7 +91,8 @@ const findAndSetDefaultImage = async() =>{
  
 const moveToResults = () =>{ 
     if(arrEvents.length > 0 || arrActivities.length > 0){
-        console.log('Sending',funImage[0])
+       // console.log('Sending',funImage[0])
+       console.log(profilePictureEvent);
         navigation.navigate('Results', {data: {arrEvents: arrEvents,arrActivities: arrActivities, funImage:funImage,profilePicture:profilePicture, profilePictureEvent: profilePictureEvent}})
         setArrActivities([]);
         setArrEvents([]);
@@ -129,17 +131,14 @@ const handlePress = (values)=>{
     var listActivities = []; 
     const range = getGeohashRange(lat,long,dist);
 
-    //  firebase.firestore().collection('PostedFunEvents').where("location", "==" , place).get().then((querySnapshot) =>{
-    //     querySnapshot.forEach((doc) =>{ 
-    //         listEvents.push(doc.data());                                         
-    //         })
-    //         setArrEvents(listEvents);   
-    //     });
+    var startFullDate = firebase.firestore.Timestamp.fromDate(date);
 
     
     firebase.firestore().collection('PostedFunEvents').where("geolocation", ">=", range.lower).where("geolocation", "<=", range.upper).get().then((querySnapshot) =>{
-            querySnapshot.forEach((doc) =>{ 
-                listEvents.push(doc.data());                                         
+        querySnapshot.forEach((doc) =>{ 
+                if(startFullDate <= doc.data().eventDate){
+                    listEvents.push(doc.data());     
+                }                                    
                 })
                 setArrEvents(listEvents);   
             });
@@ -160,7 +159,7 @@ const handlePress = (values)=>{
                                                
         }));
             setFunImage(images);
-     }).catch(console.log('Handling')); 
+     }).catch(); 
 
      firebase.firestore().collection('PostedFunActivities').where("geolocation", ">=", range.lower).where("geolocation", "<=", range.upper).get().then(async (querySnapshot) =>{
         const profilePictures = await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
@@ -170,18 +169,23 @@ const handlePress = (values)=>{
             return results;                                         
         }));
             setProfilePicture(profilePictures);
-     }).catch(console.log('Handling')); 
+     }).catch(); 
 
      
      firebase.firestore().collection('PostedFunEvents').where("geolocation", ">=", range.lower).where("geolocation", "<=", range.upper).get().then(async (querySnapshot) =>{
-        const profilePictures = await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
-            const reference = firebase.storage().ref('userImages/'+ doc.data().userId)
-            const results = await reference.getDownloadURL();
-            console.log('THIS RESULT' ,results)
-            return results;                                         
+        const profilePictures =  await Promise.all(querySnapshot.docs.map(async(doc) =>{ 
+            if(startFullDate <= doc.data().eventDate){
+                const reference = firebase.storage().ref('userImages/'+ doc.data().userId)
+                var results = await reference.getDownloadURL();
+                console.log('THIS RESULT' ,results)
+                return results;   
+            }                                 
         }));
-            setProfilePictureEvent(profilePictures);
-     }).catch(console.log('Handling')); 
+        var profilePicturesFiltered = profilePictures.filter(function (items) {
+            return items != null;
+          });
+            setProfilePictureEvent(profilePicturesFiltered);
+     }).catch(); 
 
 }
 
@@ -250,7 +254,7 @@ return(
             <Text style={styles.txt}>Within </Text>
 
             <ModalDropdown 
-            defaultValue='select' options={["0","5", '10','20','50', '75']}
+            defaultValue='select' options={["0","5", '10','20','50', '75','Everywhere']}
             onSelect= {(index,value)=>{
                 setDistance(value);
             }}

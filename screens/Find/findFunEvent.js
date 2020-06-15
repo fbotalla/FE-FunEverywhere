@@ -29,14 +29,14 @@ const FindFunEvent = ({data, profilePictureEvent}) =>{
                          <View style={{alignSelf:'center'}}><Text style={styles.txtTitle}>{item.title}</Text></View>
                          <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
                          <View><Text style={styles.txt}>{item.description}</Text></View>
-                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Date: {item.eventDate}</Text></View>
-                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Time: {item.eventTime}</Text></View>
+                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Date: {item.eventDate.toDate().toDateString()}</Text></View>
+                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Time: {item.eventTime.toDate().toTimeString()}</Text></View>
                         
 
                          <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
                                     bannerSize="smartBannerPortrait"
-                                    adUnitID="ca-app-pub-3940256099942544/6300978111"/></View> 
+                                    adUnitID="ca-app-pub-3162403518854486/3285357598"/></View> 
 
                                     {/*    ca-app-pub-3162403518854486/3285357598         */}
                 </Card> 

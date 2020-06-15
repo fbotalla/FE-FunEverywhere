@@ -1,5 +1,5 @@
 import React, { useState, useEffect }from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Alert,  } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,6 +10,7 @@ import firebase from '../../shared/firebase';
 import DismissKeyBoard from '../../shared/dismissKeyboard';
 import GoogleAutocomplete from '../../shared/googleautocomplete'
 import Button from '../../shared/button'
+import Loader from '../../shared/loader'
 
 
 const PostEvent = () =>{
@@ -62,6 +63,7 @@ const uploadImage = async() => {
 const [name, setName] = useState();
 const [picked, setPicked] = useState(false);
 const [ima, setIma] = useState();
+const [loading, setLoading] = useState(false);
 
 const [userName, setUsername] = useState({currentUser:{email:null, displayName:null}});
 
@@ -82,10 +84,15 @@ const [userName, setUsername] = useState({currentUser:{email:null, displayName:n
      
        <Formik
             initialValues ={initialValues}
-            onSubmit ={(values, {resetForm}) =>{
+            onSubmit ={async (values, {resetForm}) =>{
 
                 if(values.description != '' && values.title != '' && values.location != ''  && name != undefined){
-                    uploadImage();
+                   setLoading(true);
+                   await uploadImage()
+
+                   setTimeout(() => {
+                    setLoading(false);
+                  }, 2500);
                    
                     firebase.firestore().collection('PostedFunActivities').add({
                         user: firebase.auth().currentUser.displayName,
@@ -98,6 +105,7 @@ const [userName, setUsername] = useState({currentUser:{email:null, displayName:n
                         userId : firebase.auth().currentUser.uid,
                         geolocation: values.geolocation,
                         });  
+                    
                         Alert.alert(
                            'Submitted!',
                            'Thank you for submitting an activity!'
@@ -105,6 +113,7 @@ const [userName, setUsername] = useState({currentUser:{email:null, displayName:n
                        resetForm({values: initialValues})
                        setIma('');
                        global.googlePlacesAutocomplete.setAddressText("");
+                    
                     }else{
                        Alert.alert(
                            'Error!',
@@ -118,6 +127,9 @@ const [userName, setUsername] = useState({currentUser:{email:null, displayName:n
             <ScrollView keyboardShouldPersistTaps='always'>
             <DismissKeyBoard>
             <View style={{flex:1}}>
+
+            <Loader
+                loading={loading} />
             {/* <View  style={styles.form}><Text  style={styles.textNonEditable}>POST ACTIVITY:</Text></View> */}
                
                 <View>

@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 
 import firebase from '../../shared/firebase'
 import Button from '../../shared/button'
+import Loader from '../../shared/loader'
 
 
 
@@ -76,7 +77,7 @@ const myInfo = () =>{
             const blob = await response.blob();
             var ref = firebase.storage().ref().child("userImages/" + firebase.auth().currentUser.uid);
             ref.put(blob);
-            uploadImage();
+            await uploadImage();
             firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({image:true});
             
          }   
@@ -86,7 +87,12 @@ const myInfo = () =>{
         firebase.auth().currentUser.updateProfile({photoURL:'true'});
         const ref = firebase.storage().ref('userImages/'+ firebase.auth().currentUser.uid) 
         const result = await ref.getDownloadURL(); 
+
+        setLoading(true);
+        
         setUploaded(result);    
+
+        wait(3000).then(() => setLoading(false));
         return result    
     } 
  
@@ -108,6 +114,8 @@ const myInfo = () =>{
     const [name,setName] = useState();
     const [lastName,setLastName] = useState();
     const [pass,setPass] = useState();
+
+    const [loading, setLoading] = useState(false);
   
 
     return(    
@@ -118,6 +126,10 @@ const myInfo = () =>{
         }>
 
         <View style={styles.touchable}>
+
+        <Loader
+              loading={loading} />
+
         <TouchableOpacity onPress={findImage}>
             <Image 
                 source={{uri:uploaded}} 

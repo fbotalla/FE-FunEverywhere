@@ -37,7 +37,7 @@ const FindFunActivity = ({data,image,profilePictures}) =>{
                                <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
                                     bannerSize="smartBannerPortrait"
-                                    adUnitID="ca-app-pub-3940256099942544/6300978111"/></View> 
+                                    adUnitID="ca-app-pub-3162403518854486/3285357598"/></View> 
 
                                     {/*    ca-app-pub-3162403518854486/3285357598         */}
                     </Card> 

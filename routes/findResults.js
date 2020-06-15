@@ -8,7 +8,7 @@ const Tab = createMaterialTopTabNavigator();
 
 function PostFun({route,navigation}) {
     const { data } = route.params;
-    console.log(data);
+    //console.log(data);
   return (
          <Tab.Navigator 
             initialRouteName="Feed"

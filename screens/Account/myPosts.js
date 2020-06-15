@@ -169,8 +169,8 @@ const myPosts = () =>{
                 console.log(modalEventsOpen.key);
                
                const dateToUpdate =  new Date().toDateString();
-               const eventDateUpdate = date ? date.toDateString() : values.eventDate;
-               const eventTimeUpdate = date ? date.toTimeString() : values.eventTime;
+               const eventDateUpdate = date ? firebase.firestore.Timestamp.fromDate(date) : values.eventDate;
+               const eventTimeUpdate = date ? firebase.firestore.Timestamp.fromDate(date) : values.eventTime;
 
              firebase.firestore().collection('PostedFunEvents').doc(eventsId[modalEventsOpen.key]).update({
                 datePosted: dateToUpdate,
@@ -197,9 +197,8 @@ const myPosts = () =>{
                         
                      <DismissKeyBoard>
                      <View style={{flex:1}}>
-                  
-                     <View  style={styles.form}><Text  style={styles.textNonEditable}>YOUR EVENT:</Text></View>
-                         <View style= {{paddingTop:20}}>
+                     <View>
+                    <View style={styles.form}><Text  style={styles.textNonEditable}>YOUR EVENT:</Text></View>
                              <GoogleAutocomplete 
                                  placeholder = 'Insert new location '
                                  setAddressText= {props.values.location}
@@ -212,11 +211,13 @@ const myPosts = () =>{
                                          {props.values.geolocation = hash}
                                      }}>     
                              </GoogleAutocomplete>
-                             
+                            
                          </View >
                            
                             <View style={styles.formText}>    
+                             <View style={{width:'60%'}}>
                             <Text style={styles.textNonEditable}>{props.values.location}</Text>
+                            </View>
                              <TextInput
                                  onChangeText = {props.handleChange('title')} 
                                  value= {props.values.title}
@@ -290,9 +291,8 @@ const myPosts = () =>{
                         
                      <DismissKeyBoard>
                      <View style={{flex:1}}>
-                  
-                     <View  style={styles.form}><Text  style={styles.textNonEditable}>YOUR ACTIVITY:</Text></View>
-                         <View style= {{paddingTop:10}}>
+                     <View>
+                    <View style={styles.form}><Text  style={styles.textNonEditable}>YOUR ACTIVITY:</Text></View>
                              <GoogleAutocomplete 
                                  placeholder = 'Insert new location '
                                  setAddressText= {props.values.location}
@@ -309,7 +309,9 @@ const myPosts = () =>{
                          </View >
                            
                             <View style={styles.formText}>    
+                            <View style={{width:'60%'}}>
                             <Text style={styles.textNonEditable}>{props.values.location}</Text>
+                            </View>
                              <TextInput
                                  onChangeText = {props.handleChange('title')} 
                                  value= {props.values.title}
@@ -346,15 +348,15 @@ const myPosts = () =>{
 
         <ScrollView>
         <View style={{alignItems:'center'}}><Button onPress={displayPosts}>Load your posts</Button></View>
-        <Text style={{alignSelf:'center', fontSize:25, margin:20}}>{arrActivities.length > 0 ? 'Your Posted Events' : null }</Text>
+        <Text style={{alignSelf:'center', fontSize:25, margin:20}}>{arrEvents.length > 0 ? 'Your Posted Events' : null }</Text>
         {arrEvents.map((item, key)=>(  
             <Card key={key}>  
                          <View style={styles.cardImageFirst}><Image source= {{uri: profilePicture[0]}}  style={styles.profilePic} /><Text style={styles.txtTitle}> {item.title}</Text></View>
                          <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
                          <View><Text style={styles.txt}> Posted on: {item.datePosted}</Text></View>
                          <View><Text style={styles.txt}> {item.description}</Text></View>
-                         <View style={{flexDirection:'row'}}><Text style={styles.txt}> Event Date: {item.eventDate}</Text></View>
-                         <View><Text style={styles.txt}> Event Time: {item.eventTime}</Text></View> 
+                         <View style={{flexDirection:'row'}}><Text style={styles.txt}> Event Date: {item.eventDate.toDate().toDateString()}</Text></View>
+                         <View><Text style={styles.txt}> Event Time: {item.eventTime.toDate().toTimeString()}</Text></View> 
                     <View style={{flexDirection:'row', alignSelf:'center', width:'50%', justifyContent:'space-around'}}><TouchableOpacity onPress={()=> {
                             console.log(eventsId[key]);
                             //firebase.firestore().collection('PostedFunEvents').doc(eventsId[key]).delete();
@@ -383,7 +385,7 @@ const myPosts = () =>{
                     <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
                                     bannerSize="smartBannerPortrait"
-                                    adUnitID="ca-app-pub-3940256099942544/6300978111"/></View> 
+                                    adUnitID="ca-app-pub-3162403518854486/3285357598"/></View> 
 
                                     {/*    ca-app-pub-3162403518854486/3285357598         */}
             </Card>
@@ -425,7 +427,7 @@ const myPosts = () =>{
                         <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
                                     bannerSize="smartBannerPortrait"
-                                    adUnitID="ca-app-pub-3940256099942544/6300978111"/></View> 
+                                    adUnitID="ca-app-pub-3162403518854486/3285357598"/></View> 
 
                                     {/*    ca-app-pub-3162403518854486/3285357598         */}
             
@@ -474,14 +476,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginTop:'6%',
         alignItems: 'center',
+        marginBottom:20,
     },
     formText:{
-        alignItems: 'flex-start',
         marginTop:'3%',
-        alignItems: 'center',
+        alignItems:'center'
      },
-    textNonEditable:{
-        paddingTop:15, 
+     textNonEditable:{
+        paddingTop:15,
         fontFamily:'Bellota-Regular',
         fontSize: 20,
      },
@@ -491,7 +493,8 @@ const styles = StyleSheet.create({
         paddingTop:15, 
         fontFamily:'Bellota-Regular',
         fontSize: 20,
-        marginLeft:'1%'
+        marginLeft:'1%',
+        marginBottom: 15,
     },
     textBox:{
         borderWidth: StyleSheet.hairlineWidth,
