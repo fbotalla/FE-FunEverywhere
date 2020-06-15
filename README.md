@@ -1,2 +1,2 @@
 React Native application.<br>
-Shortly downloadable on Google Play
+Downladable on Google Play <b> FE-Funeverywhere </b>
