@@ -17,7 +17,7 @@ const FindFunEvent = ({data, profilePictureEvent}) =>{
 
     useEffect(() => {
         console.log('Logging profiles: ',profilePictureEvent[0])
-       
+        
     })
 
     return(
@@ -30,9 +30,8 @@ const FindFunEvent = ({data, profilePictureEvent}) =>{
                          <View style={styles.cardFirstLine}><Text style={styles.txt}>{item.location}</Text></View>
                          <View><Text style={styles.txt}>{item.description}</Text></View>
                          <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Date: {item.eventDate.toDate().toDateString()}</Text></View>
-                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Time: {item.eventTime.toDate().toTimeString()}</Text></View>
-                        
-
+                         <View style={{flexDirection:'row'}}><Text style={styles.txt}>Event Time: {item.eventTime.toDate().toUTCString().slice(17,22)}</Text></View>
+                    
                          <View style={styles.ad}><AdMobBanner
                                     style={styles.bottomBanner}
                                     bannerSize="smartBannerPortrait"

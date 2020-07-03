@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, StyleSheet, Image,TouchableOpacity,ScrollView, Alert, Modal,TextInput,RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, Image,TouchableOpacity,ScrollView, Alert, Modal,TextInput,RefreshControl, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Formik } from 'formik';
@@ -160,17 +160,19 @@ const myPosts = () =>{
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
+
     return(    
     <View>
-        <Modal visible={modalEventsOpen.visible} animationType= 'slide'>
+        <Modal visible={modalEventsOpen.visible} animationType= 'slide' >
         <Formik
-            initialValues ={{user:firebase.auth().currentUser.displayName,title:modalEventsOpen.arr.title, description:modalEventsOpen.arr.description,eventTime:modalEventsOpen.arr.eventTime, eventDate:modalEventsOpen.arr.eventDate, datePosted:modalEventsOpen.arr.datePosted, location:modalEventsOpen.arr.location, geolocation: modalEventsOpen.arr.geolocation }}
+            
+            initialValues ={{user:firebase.auth().currentUser.displayName,title:modalEventsOpen.arr.title, description:modalEventsOpen.arr.description,eventTime:modalEventsOpen.arr.eventTime, eventDate:modalEventsOpen.arr.eventDate, datePosted:modalEventsOpen.arr.datePosted, location:modalEventsOpen.arr.location, geolocation: modalEventsOpen.arr.geolocation}}
             onSubmit = {(values)=>{
-                console.log(modalEventsOpen.key);
-               
+                //console.log(modalEventsOpen.key);
+               console.log(date);
                const dateToUpdate =  new Date().toDateString();
-               const eventDateUpdate = date ? firebase.firestore.Timestamp.fromDate(date) : values.eventDate;
-               const eventTimeUpdate = date ? firebase.firestore.Timestamp.fromDate(date) : values.eventTime;
+               const eventDateUpdate = firebase.firestore.Timestamp.fromDate(date);
+               const eventTimeUpdate = firebase.firestore.Timestamp.fromDate(date);
 
              firebase.firestore().collection('PostedFunEvents').doc(eventsId[modalEventsOpen.key]).update({
                 datePosted: dateToUpdate,
@@ -229,17 +231,27 @@ const myPosts = () =>{
                                  style={styles.textBox}/>
          
                              {/* <Text  style={styles.text} >Click on the below icons to pick a time and a date for the event</Text> */}
-         
-                             <DateTimeImage onPress={showTimepicker} name = 'alarm'>{props.values.eventTime}</DateTimeImage> 
-                             <DateTimeImage onPress={showDatepicker} name = 'calendar'>{props.values.eventDate}</DateTimeImage> 
+                             {/* {props.values.eventTime.toDate().toLocaleTimeString('en-US' ,{timeZone: 'UTC', hour:'2-digit', minute:'2-digit', hour12: false})} */}
+                             <DateTimeImage onPress={showTimepicker} name = 'alarm'>{Platform.OS === 'ios' ? props.values.eventTime.toDate().toUTCString().slice(17,22) : ''}</DateTimeImage> 
+                             <DateTimeImage onPress={showDatepicker} name = 'calendar'>{Platform.OS === 'ios' ? props.values.eventDate.toDate().toDateString() : ''}</DateTimeImage> 
                          
                               {show && (<DateTimePicker onChange={(event, selectedDate) => {
                                                                 const currentDate = selectedDate || date;
-                                                                setShow(Platform.OS === 'ios');
-                                                                mode === 'time' ? props.values.eventTime = currentDate.toTimeString() : props.values.eventDate = currentDate.toDateString(); ;
+                                                                if(Platform.OS !== 'ios'){
+                                                                   console.log('I am an Androi')
+                                                                   
+                                                                  setDate(currentDate);
+                                                                   setShow(false);
+                                                                }else{
+                                                                    console.log('APPLE JERE')
+                                                                    mode === 'time' ? props.values.eventTime =  firebase.firestore.Timestamp.fromDate(currentDate) : props.values.eventDate = firebase.firestore.Timestamp.fromDate(currentDate);
+                                                                    setDate(currentDate);
+                                                                }
                                                                
+                                                              //  console.log(firebase.firestore.Timestamp.fromDate(currentDate).toDate().toLocaleTimeString())
+                        
                                                                 
-                                                            }} value = {new Date()} mode = {mode}>
+                                                            }}value = {date} mode = {mode} >
                                         </DateTimePicker>)}
 
                               <View style={{flexDirection:'row',justifyContent:'space-evenly', width:'60%'}}><MaterialIcons name="cancel" size={26} onPress={()=>{setModalEventsOpen({visible:false, arr:''})}} /><MaterialIcons name="save" size={26} onPress={props.handleSubmit} /></View>
@@ -356,7 +368,7 @@ const myPosts = () =>{
                          <View><Text style={styles.txt}> Posted on: {item.datePosted}</Text></View>
                          <View><Text style={styles.txt}> {item.description}</Text></View>
                          <View style={{flexDirection:'row'}}><Text style={styles.txt}> Event Date: {item.eventDate.toDate().toDateString()}</Text></View>
-                         <View><Text style={styles.txt}> Event Time: {item.eventTime.toDate().toTimeString()}</Text></View> 
+                         <View><Text style={styles.txt}> Event Time: {item.eventTime.toDate().toUTCString().slice(17,22)}</Text></View> 
                     <View style={{flexDirection:'row', alignSelf:'center', width:'50%', justifyContent:'space-around'}}><TouchableOpacity onPress={()=> {
                             console.log(eventsId[key]);
                             //firebase.firestore().collection('PostedFunEvents').doc(eventsId[key]).delete();
