@@ -9,8 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-shared/firebase.js
-shared/googleautocomplete.js
+
 app.json
 
 # macOS
